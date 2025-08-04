@@ -2,6 +2,7 @@
 #include "sidebar.h"
 #include "topbar.h"
 #include "app_container.h"
+#include "app_manager.h"
 
 // 屏幕尺寸（这些值应该根据实际硬件调整）
 #define SCREEN_WIDTH 1280
@@ -38,4 +39,7 @@ void gui_init(lv_disp_t *disp)
     
     // 创建应用容器
     app_container_obj = app_container_create(main_screen, SCREEN_WIDTH, SCREEN_HEIGHT, TOPBAR_HEIGHT);
+    
+    // 初始化App管理器
+    app_manager_init(app_container_obj);
 }

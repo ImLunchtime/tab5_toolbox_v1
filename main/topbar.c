@@ -1,6 +1,7 @@
 #include "topbar.h"
 #include "image_resources.h"
 #include "sidebar.h"
+#include "app_manager.h"
 
 // 顶栏按钮图片数组
 static const lv_image_dsc_t* topbar_images[] = {
@@ -20,6 +21,16 @@ static const char* topbar_button_names[] = {
     "USB",
     "Music",
     "More"
+};
+
+// 按钮对应的App类型
+static const app_type_t button_app_mapping[] = {
+    APP_ADC,
+    APP_I2C,
+    APP_GPIO,
+    APP_USB,
+    APP_MUSIC,
+    APP_MORE_MENU
 };
 
 void topbar_button_event_cb(lv_event_t* e)
@@ -42,9 +53,10 @@ void topbar_button_event_cb(lv_event_t* e)
     else if(code == LV_EVENT_CLICKED) {
         // 获取按钮的用户数据（按钮索引）
         int* btn_index = (int*)lv_obj_get_user_data(btn);
-        if(btn_index) {
-            // 这里可以添加具体的按钮功能
-            // 目前只是占位符
+        if(btn_index && *btn_index < 6) {
+            // 切换到对应的App
+            app_type_t app_type = button_app_mapping[*btn_index];
+            app_manager_switch_to_app(app_type);
         }
     }
 }
