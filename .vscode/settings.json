@@ -1,4 +1,7 @@
 {
     "idf.flashType": "UART",
-    "idf.portWin": "COM5"
+    "idf.portWin": "COM5",
+    "files.associations": {
+        "lvgl.h": "c"
+    }
 }
