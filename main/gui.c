@@ -1,42 +1,41 @@
 #include "gui.h"
+#include "sidebar.h"
+#include "topbar.h"
+#include "app_container.h"
 
-static void btn_event_cb(lv_event_t * e)
+// 屏幕尺寸（这些值应该根据实际硬件调整）
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 720
+
+static lv_obj_t* main_screen;
+static lv_obj_t* sidebar_obj;
+static lv_obj_t* topbar_obj;
+static lv_obj_t* app_container_obj;
+
+int gui_get_screen_width(void)
 {
-    lv_obj_t * btn = lv_event_get_target(e);
-    if(lv_event_get_code(e) == LV_EVENT_CLICKED) {
-        // Toggle button state
-        bool current_state = lv_obj_has_state(btn, LV_STATE_CHECKED);
-        if(current_state) {
-            lv_obj_clear_state(btn, LV_STATE_CHECKED);
-        } else {
-            lv_obj_add_state(btn, LV_STATE_CHECKED);
-        }
-    }
+    return SCREEN_WIDTH;
 }
 
-void gui_init(lv_disp_t *disp) 
+int gui_get_screen_height(void)
 {
-    // Get the screen size
-    lv_coord_t screen_width = lv_display_get_horizontal_resolution(disp);
-    lv_coord_t screen_height = lv_display_get_vertical_resolution(disp);
+    return SCREEN_HEIGHT;
+}
 
-    // Create a button in the center
-    lv_obj_t *btn = lv_btn_create(lv_scr_act());
+void gui_init(lv_disp_t *disp)
+{
+    // 获取当前活动屏幕
+    main_screen = lv_screen_active();
     
-    // Set button size (100x50 pixels)
-    lv_obj_set_size(btn, 100, 50);
+    // 设置主屏幕背景为灰色
+    lv_obj_set_style_bg_color(main_screen, lv_color_hex(0x808080), 0);
     
-    // Center the button
-    lv_obj_align(btn, LV_ALIGN_CENTER, 0, 0);
+    // 创建侧边栏
+    sidebar_obj = sidebar_create(main_screen);
     
-    // Add a label to the button
-    lv_obj_t *label = lv_label_create(btn);
-    lv_label_set_text(label, "Press Me!");
-    lv_obj_center(label);
-
-    // Make the button toggleable
-    lv_obj_add_flag(btn, LV_OBJ_FLAG_CHECKABLE);
+    // 创建顶栏
+    topbar_obj = topbar_create(main_screen, SCREEN_WIDTH);
     
-    // Add click event handler
-    lv_obj_add_event_cb(btn, btn_event_cb, LV_EVENT_CLICKED, NULL);
-} 
+    // 创建应用容器
+    app_container_obj = app_container_create(main_screen, SCREEN_WIDTH, SCREEN_HEIGHT, TOPBAR_HEIGHT);
+}
